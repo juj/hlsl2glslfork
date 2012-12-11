@@ -145,6 +145,12 @@ if (WIN32)
                          WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/hlslang/MachineIndependent
                          COMMENT "Executing flex on hlslang.l"
                       )
+
+    if (MSVC)
+        # Generate a dummy unistd.h file so that flex-generated code builds on Windows.
+        # But be sure to do this generation only on Windows MSVC so that the dummy unistd.h won't generate problems on other generators.
+        file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/hlslang/MachineIndependent/unistd.h "// This is a dummy file to satisfy flex-generated include (that is not actually needed on Windows).")
+    endif()
     
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D\"_HAS_ITERATOR_DEBUGGING=0\" /D\"_SECURE_SCL=0\" /D\"_CRT_SECURE_NO_WARNINGS\"")
     SET(TEST_LIBS opengl32.lib)
