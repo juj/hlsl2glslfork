@@ -372,6 +372,15 @@ static std::string GetCompiledShaderText(ShHandle parser)
 	return txt;
 }
 
+void StringReplaceAll(std::string& str, const std::string& oldStr, const std::string& newStr)
+{
+	size_t pos = 0;
+	while((pos = str.find(oldStr, pos)) != std::string::npos)
+	{
+		str.replace(pos, oldStr.length(), newStr);
+		pos += newStr.length();
+	}
+}
 
 static bool TestFile (TestRun type,
 					  const std::string& inputPath,
@@ -438,6 +447,9 @@ static bool TestFile (TestRun type,
 
 			std::string output;
 			ReadStringFromFile (outputPath.c_str(), output);
+
+			StringReplaceAll(text, "\r\n", "\n");
+			StringReplaceAll(output, "\r\n", "\n");
 
 			if (text != output)
 			{
